@@ -136,7 +136,40 @@ var Game = /** @class */ (function () {
 }());
 var game = new Game(30, 50);
 game.canvas.onclick = function (event) {
+    if (isDrawing)
+        return;
     var x = event.offsetX;
     var y = event.offsetY;
     game.draw(Math.floor(x / 10), Math.floor(y / 10));
+};
+var isDrawing = false;
+var pointArr = [];
+for (var x = 0; x < 50; x++) {
+    pointArr[x] = [];
+    for (var y = 0; y < 30; y++) {
+        pointArr[x][y] = false;
+    }
+}
+game.canvas.onmousemove = function (event) {
+    if (!isDrawing) {
+        return;
+    }
+    var x = Math.floor(event.offsetX / 10);
+    var y = Math.floor(event.offsetY / 10);
+    if (!pointArr[x][y]) {
+        game.draw(x, y);
+    }
+    pointArr[x][y] = true;
+};
+game.canvas.onmousedown = function () {
+    isDrawing = true;
+};
+game.canvas.onmouseup = function () {
+    for (var x = 0; x < 50; x++) {
+        pointArr[x] = [];
+        for (var y = 0; y < 30; y++) {
+            pointArr[x][y] = false;
+        }
+    }
+    isDrawing = false;
 };

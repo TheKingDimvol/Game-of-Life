@@ -136,8 +136,46 @@ class Game {
 const game = new Game(30, 50);
 
 game.canvas.onclick = function(event) {
+    if (isDrawing) return;
     const x = event.offsetX; 
     const y = event.offsetY;
    
     game.draw(Math.floor(x/10), Math.floor(y/10));
 }
+
+
+let isDrawing: boolean = false;
+let pointArr: Array<Array<boolean>> = [];
+
+for (let x = 0; x < 50; x++) {
+    pointArr[x] = [];
+    for (let y = 0; y < 30; y++) {
+        pointArr[x][y] = false
+    }
+}
+
+game.canvas.onmousemove = function(event) {
+    if (!isDrawing) {
+       return;
+    }
+    const x = Math.floor(event.offsetX / 10); 
+    const y = Math.floor(event.offsetY / 10);
+    if (!pointArr[x][y]) {
+        game.draw(x, y);
+    }
+    pointArr[x][y] = true;
+};
+
+game.canvas.onmousedown = () => {
+    isDrawing = true;
+};
+
+game.canvas.onmouseup = () => {
+    for (let x = 0; x < 50; x++) {
+        pointArr[x] = [];
+        for (let y = 0; y < 30; y++) {
+            pointArr[x][y] = false
+        }
+    }
+    isDrawing = false;
+};
